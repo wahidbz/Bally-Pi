@@ -1,0 +1,8 @@
+/* Netlify SPA routing */
+/*  All requests fallback to index.html for React Router */
+/* ================================================================ */
+/* place this file in public/ folder so Vite copies it to dist/    */
+/* ================================================================ */
+
+/assets/*  /assets/:splat  200
+/*          /index.html     200
