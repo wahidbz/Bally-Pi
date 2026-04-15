@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0a0014" />
+    <title>Bally Pi 🎮</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Pi Network SDK -->
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body, #root {
+        width: 100%; height: 100%;
+        overflow: hidden;
+        background: #0a0014;
+        font-family: 'Rajdhani', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+      /* Loading screen */
+      #loading-screen {
+        position: fixed; inset: 0;
+        background: #0a0014;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+      }
+      #loading-screen.hidden { opacity: 0; pointer-events: none; }
+      .loading-ball {
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #00f5ff, #8b00ff);
+        animation: bounceBall 0.8s ease-in-out infinite alternate;
+        box-shadow: 0 0 30px rgba(0,245,255,0.8);
+      }
+      .loading-title {
+        margin-top: 20px;
+        color: #00f5ff;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 18px;
+        text-shadow: 0 0 20px #00f5ff;
+        letter-spacing: 2px;
+      }
+      .loading-sub {
+        margin-top: 10px;
+        color: rgba(255,255,255,0.5);
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 14px;
+      }
+      @keyframes bounceBall {
+        from { transform: translateY(0); }
+        to   { transform: translateY(-30px); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+      <div class="loading-ball"></div>
+      <div class="loading-title">BALLY Pi</div>
+      <div class="loading-sub">Loading physics engine...</div>
+    </div>
+
+    <div id="root"></div>
+
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Hide loading screen once React mounts
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const ls = document.getElementById('loading-screen');
+          if (ls) ls.classList.add('hidden');
+        }, 1200);
+      });
+
+      // Initialize Pi SDK
+      window.piSdkReady = false;
+      try {
+        if (typeof Pi !== 'undefined') {
+          Pi.init({ version: '2.0', sandbox: true });
+          window.piSdkReady = true;
+        }
+      } catch (e) {
+        console.warn('Pi SDK not available (running outside Pi Browser):', e.message);
+      }
+    </script>
+  </body>
+</html>
